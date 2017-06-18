@@ -25,7 +25,10 @@ var repoSchema = mongoose.Schema({
   open_issues: Number,
   default_branch: String,
   followers_url: String,
-  following_url: String
+  following_url: String,
+  created_at: Date,
+  updated_at: Date,
+  pushed_at: Date
 });
 
 // // compile schema
