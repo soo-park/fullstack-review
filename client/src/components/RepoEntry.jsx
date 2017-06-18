@@ -3,7 +3,6 @@ import React from 'react';
 
 const RepoEntry = (props) => (
   <div>
-  {console.log(props)}
       <h4> {props.repo.name} </h4>
   </div>
 )

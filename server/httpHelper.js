@@ -3,7 +3,6 @@ var model = require('../database/index.js');
 
 
 module.exports.githubRequest = (term) => {
-  console.log("I am githubRequest");
 
   return new Promise((resolve , reject) => {
 
@@ -52,7 +51,6 @@ module.exports.saveToDatabase = (body) => {
     };
 
     var aRecord = new model.Repo(item);
-    // return aRecord;
 
     return new Promise((resolve, reject) => {
       aRecord.save(function(err) {
@@ -65,8 +63,6 @@ module.exports.saveToDatabase = (body) => {
     })
   });
 
-  console.log(repos);
-
   Promise.all(repos)
   .then((arrOfPromiseResults) => { console.log('Records saved.'); })
   .catch((err) => { console.log('Error saving data to DB: ', err); });
@@ -76,4 +72,19 @@ module.exports.saveToDatabase = (body) => {
 
 // get helper to find 25 default data from db
 // return promise
+module.exports.getDataFromDatabase = () => {
+
+  return new Promise((resolve, reject) => {
+    return model.Repo.find({}, (err, docs) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(docs);
+      }
+    });
+  })
+};
+
+
+
 

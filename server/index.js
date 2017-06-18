@@ -1,47 +1,37 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var app = express();
 var request = require('request');
+
 var httpHelper = require('./httpHelper.js');
-// var model = require('../database/index.js');
-// var data = require('../data.json')
+var app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/../client/dist'));
-  var port = 1128;
-  app.listen(port, function() {
+
+var port = 1128;
+
+app.listen(port, function() {
   console.log(`listening on port ${port}`);
 });
 
+
 app.get('/repos', function (req, res) {
 
-  // get data from database
-
-
-  // options for the ajax request
-  var options = {
-    url: `https://api.github.com/users/${term}/repos`,
-    headers: {
-      'Authorization': `Basic ${key}`,
-      'User-Agent': 'anything'
-    },
-    type: "GET",
-    dataType: 'text'
-  };
-
-  request(options, function() {
-
+  console.log(httpHelper.getDataFromDatabase());
+  httpHelper.getDataFromDatabase()
+  .then((docs) => {
+    res.send(docs);
+    res.end();
   })
-
-  res.setHeader('Content-Type', 'text/plain');
-  res.write('you posted:\n' + req.params);
-  res.end(JSON.stringify(req.params, null, 2));
+  .catch((err) => {
+    console.log(err);
+  });
 });
 
-app.post('/repos/import', function (req, res) {
 
+app.post('/repos/import', function (req, res) {
   // used body parser instead of chunking
   var term = req.body.name;
 
@@ -49,14 +39,28 @@ app.post('/repos/import', function (req, res) {
   .then((body) => {
     httpHelper.saveToDatabase(body);
     res.setHeader('Content-Type', 'application/json');
-    res.status(200).send(body)
+    res.status(200).send(body);
+    res.end();
   })
   .catch((err) => {
     console.log(err);
-  })
+  });
+
 });
 
+
 // request without promise
+  // options for the ajax request
+  // var options = {
+  //   url: `https://api.github.com/users/${term}/repos`,
+  //   headers: {
+  //     'Authorization': `Basic ${key}`,
+  //     'User-Agent': 'anything'
+  //   },
+  //   type: "POST",
+  //   dataType: 'text'
+  // };
+
   // request(options, function(err, responseFromGithub, body) {
   //   if (err) {
   //     console.log(err);
@@ -66,11 +70,5 @@ app.post('/repos/import', function (req, res) {
   //     res.send(body, 200);
   //   }
   // })
-
-
-
-
-
-
 
 

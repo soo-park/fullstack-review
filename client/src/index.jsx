@@ -12,6 +12,18 @@ class App extends React.Component {
     }
   }
 
+  componentDidMount () {
+    // bring data from server that is connected to db
+    $.ajax({
+      url: "/repos",
+      success: (data) => {
+        for (let i = 0; i < data.length; i++) {
+          this.setState( { repos: this.state.repos.concat([data[i]]) });
+        }
+      }
+    });    
+  }
+
   search (term) {
     console.log(`${term} was searched`);
     $.ajax({
@@ -19,13 +31,11 @@ class App extends React.Component {
       type: "POST",
       data: {'name': term },
       success: (data) => {
-        console.log(data);
         for (let i = 0; i < data.length; i++) {
           this.setState( { repos: this.state.repos.concat([data[i]]) });
-
         }
       }
-    })
+    });
   }
 
   render () {
@@ -37,7 +47,7 @@ class App extends React.Component {
   }
 }
 
-// pass in functions & properties to be used in DOM for event handling
+// pass in the ajax call result to be used in DOM for event handling
 ReactDOM.render(<App />, document.getElementById('app'));
 
 window.App = App;
