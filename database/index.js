@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 
+// to use Promise for mongoose
+mongoose.Promise = global.Promise;
 // generates fetcher db
 mongoose.connect('mongodb://localhost/fetcher');
 var db = mongoose.connection;
@@ -11,11 +13,12 @@ db.once('open', function() {
 
 // generate schema
 var repoSchema = mongoose.Schema({
-  name: {
-    type: String,
+  id: {
+    type: Number,
     index: true,
     unique: true
   },
+  name: String,
   html_url: String,
   forks: Number,
   watchers: Number,
@@ -25,7 +28,9 @@ var repoSchema = mongoose.Schema({
   following_url: String
 });
 
-// compile schema
-var Repo = mongoose.model('Repo', repoSchema);
+// // compile schema
+// var Repo = mongoose.model('Repo', repoSchema);
 
-module.exports = Repo;
+// module.exports = Repo;
+
+module.exports.Repo = mongoose.model('Repo', repoSchema);
